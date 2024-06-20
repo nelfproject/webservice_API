@@ -9,5 +9,5 @@ Simply enter your details, filepaths and desired parameters to webservice.py and
 ## Usage
 - Load your python environment 
 - Install the clam package: pip install clam
-- Edit run.py to your settings
+- Edit run.py to your settings. Possibly also edit the desired parameters.
 - Start the webservice: python run.py

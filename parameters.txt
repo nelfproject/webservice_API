@@ -1,0 +1,41 @@
+PARAMETERS
+   - version
+       Model Version: Select which version of the model you want to use. The highest version corresponds to the best and latest model.
+       Options: v2, v1
+       Default: v2
+   - vad
+       Voice Activity Detection: Model to use for Voice Activity Detection
+       Options: ECAPA2, rVAD, CRDNN
+       Default: ECAPA2
+   - diarization
+       Speaker Diarization: Perform speaker diarization by recognizing (single/re-occurring) speakers in the audio or not. Speaker diarization requires the Voice Activity Detection model to be ECAPA2.
+       Options: speaker_diarization, no_speaker_diarization
+       Default: speaker_diarization
+   - wordleveltiming
+       Timing: Only generate the timings of short segments (= one or a few consecutive sentences), or also compute the start and end time of every spoken word separately.
+       Options: segment_timings, word_timings
+       Default: segment_timings
+   - langid
+       Detect Language: Detect which language is spoken in every segment if the audio might contain non-Dutch speech.
+       Options: detect_language, skip_language_detection
+       Default: skip_language_detection
+   - annot
+       Transcription type: Generate only a verbatim transcription of the speech, or also a subtitle transcription.
+       Options: verbatim, both
+       Default: both
+   - formatting
+       Formatting: The transcription should contain all tags (e.g. <*d>, <.>) or should be cleaned up text
+       Options: clean, tags
+       Default: clean
+   - vadtiming
+       Timestamps: Include start/end timestamps for speech sentences or generate one large body of text without timestamps
+       Options: timestamps, notimestamps
+       Default: timestamps
+   - speakerannot
+       Speaker annotation: If speaker diarization is activated, combine the speaker diarization with the transcription or output separate files.
+       Options: combine, separate
+       Default: combine
+   - device
+       Compute device: Decode on GPU (fast) or CPU (slow). GPU jobs might need to queue for a short while. Processing time on GPU is estimated at around 0.25-0.50 RTF depending on the chosen configuration
+       Options: GPU, CPU
+       Default: GPU

@@ -3,8 +3,8 @@
 """
 NeLF Transcription Webservice Python API
 Author: Jakob Poncelet
-Version: v0.1
-Date: 24/05/2024
+Version: v0.3
+Date: 20/06/2024
 Contact: jakob.poncelet(at)kuleuven.be
 """
 
@@ -56,10 +56,10 @@ os.makedirs(output_dir, exist_ok=True)
 print("Storing output at: %s" % output_dir)
 
 
-#create client, connect to server.
+# Create client, connect to server.
 clamclient = clam.common.client.CLAMClient("https://ws.nelfproject.be/nelf_transcribe", username, password, basicauth=True)
 
-#Now we call the webservice and create the project (in this and subsequent methods of clamclient, exceptions will be raised on errors).
+# Now we call the webservice and create the project (in this and subsequent methods of clamclient, exceptions will be raised on errors).
 clamclient.create(project)
 
 # Get project status and specification
@@ -73,34 +73,11 @@ for input_file in input_files:
     fileid, file_ext = os.path.splitext(os.path.basename(input_file))
     clamclient.addinputfile(project, data.inputtemplate(input_templates[file_ext]), input_file)
 
-## PARAMETERS ###########################################################################
-# Set Parameters (the first option is the default and recommended setting)
-#   - version
-#       Model Version: Select which version you want to use
-#       Options: v2 (=latest), v1
-#   - vad
-#       Voice Activity Detection: Model to use for Voice Activity Detection
-#       Options: ECAPA2, rVAD, CRDNN
-#   - type
-#       Model Type: Transcribe the input recordings with an ASR model (best transcriptions) or generate word-level timings (still experimental!) with a transcription+timing model
-#       Options: best (=transcribe), wordtimings
-#   - annot
-#       Transcription type: Generate a verbatim transcription, a subtitle transcription, or both
-#       Options: both, verbatim, subtitle
-#   - formatting
-#       Formatting: The transcription should contain all tags (e.g. <*d>, <.>) or should be cleaned up text
-#       Options: clean, tags
-#   - vadtimings
-#       Timestamps: Include start/end timestamps for speech sentences or generate one large body of text without timestamps
-#       Options: timestamps, notimestamps
-#   - device
-#       Compute device -  Decode on GPU (fast) or CPU (slow). GPU jobs might need to queue for a short while. Processing time on GPU is estimated at around 0.25-0.50 RTF depending on the chosen configuration
-#       Options: GPU, CPU
-#######################################################################################
 # Example with Default parameters
-data = clamclient.start(project, version="v2", vad="ECAPA2", type="best", annot="both", formatting="clean", vadtiming="timestamps", device="GPU")
+# If you want different parameters, check out 'parameters.txt' for all valid parameters and their functions
+data = clamclient.start(project, version="v2", vad="ECAPA2", diarization="speaker_diarization", wordleveltiming="segment_timings", langid="skip_language_detection", annot="both", formatting="clean", vadtiming="timestamps", speakerannot="combine", device="GPU")
 
-# check for parameter errors
+# Check for parameter errors
 if data.errors:
     print("An error occured: " + data.errormsg, file=sys.stderr)
     for parametergroup, paramlist in data.parameters:
@@ -110,7 +87,7 @@ if data.errors:
     clamclient.delete(project) #delete project
     sys.exit(1)
 
-#If everything went well, the system is now running, we simply wait until it is done and retrieve the status in the meantime
+# If everything went well, the system is now running, we simply wait until it is done and retrieve the status in the meantime
 prev_status = None
 while data.status != clam.common.status.DONE:
     data = clamclient.get(project)  # get status
@@ -121,9 +98,9 @@ while data.status != clam.common.status.DONE:
         time.sleep(5) #wait 5 seconds before polling status
 print('Done processing all files.')
 
-#Iterate over output files
+# Iterate over output files
 for outputfile in data.output:
     outputfile.copy(os.path.join(output_dir, outputfile.filename))
 
-#delete the project (otherwise it would remain on server and clients would leave a mess)
-clamclient.delete(project)
+# Delete the project (otherwise it would remain on server and clients would leave a mess)
+#clamclient.delete(project)
