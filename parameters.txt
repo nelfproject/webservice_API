@@ -6,7 +6,7 @@ PARAMETERS
    - vad
        Voice Activity Detection: Model to use for Voice Activity Detection
        Options: ECAPA2, rVAD, CRDNN
-       Default: ECAPA2
+       Default: rVAD
    - diarization
        Speaker Diarization: Perform speaker diarization by recognizing (single/re-occurring) speakers in the audio or not. Speaker diarization requires the Voice Activity Detection model to be ECAPA2.
        Options: speaker_diarization, no_speaker_diarization
